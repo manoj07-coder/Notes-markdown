@@ -1,40 +1,38 @@
-import { useState } from "react"
-import MarkDown from 'react-markdown'
-import Showdown from "showdown"
-
 import PropTypes from 'prop-types';
 
-export default function Editor({ currentNote, updatedNote}){
+export default function Sidebar(props){
+    const noteElements = props.notes.map((note, index) => (
+        <div key={note.id}>
+          <div
+            className={`title ${note.id === props.currentNote.id ? "selected-note" : ""}`}
+            onClick={() => props.setCurrentNoteId(note.id)}
+          >
+            <h4 className="text-snippet">Note {index + 1}</h4>
+          </div>
+        </div>
+      ));
+      
 
-    const [selectedTab, setSelectedTab] = useState("write")
-
-    const converter = new Showdown.Converter({
-        tables : true,
-        simplifiedAutoLink : true,
-        strikethrough : true,
-        tasklists : true
-    })
-
-    return(
-        <section className="pane editor">
-            <MarkDown 
-            value = {currentNote.body}
-            onChange = {updatedNote}
-            selectedTab = {selectedTab}
-            onTabChange = {setSelectedTab}
-            generateMarkdownPreview = {(markdown) => 
-            Promise.resolve(converter.makeHtml(markdown))
-            }
-            minEditorHeight = {80}
-            heightUnits = "vh"
-            />
+    return (
+        <section className='pane sidebar'>
+            <div className='sidebar--header'>
+                <h3>Notes</h3>
+                <button className='new-note' onClick={props.newNote}>+</button>
+            </div>
+            {noteElements}
         </section>
     )
 }
 
-Editor.propTypes = {
+Sidebar.propTypes = {
+    notes : PropTypes.arrayOf(
+        PropTypes.shape({
+            id : PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        })
+    ).isRequired,
     currentNote : PropTypes.shape({
-        body : PropTypes.string.isRequired,
-    }).isRequired,
-    updatedNote : PropTypes.func.isRequired,
+        id : PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    }),
+    setCurrentNoteId : PropTypes.func.isRequired, 
+    newNote: PropTypes.func.isRequired,
 };
