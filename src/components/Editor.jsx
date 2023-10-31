@@ -1,37 +1,29 @@
+import { useState } from 'react';
+import MDEditor from '@uiw/react-md-editor';
+
 import PropTypes from 'prop-types';
 
-export default function Sidebar(props){
-    const noteElements = props.notes.map((note, index) => (
-        <div key={note.id}>
-          <div
-            className={`title ${note.id === props.currentNote.id ? "selected-note" : ""}`}
-            onClick={() => props.setCurrentNoteId(note.id)}
-          >
-            <h4 className="text-snippet">Note {index + 1}</h4>
-          </div>
-        </div>
-      ));
-      
+export default function Editor({ currentNote, updateNote }) {
+    const [selectedTab, setSelectedTab] = useState('write');
 
     return (
-        <section className='pane sidebar'>
-            <div className='sidebar--header'>
-                <h3>Notes</h3>
-                <button className='new-note'>+</button>
-            </div>
-            {noteElements}
+        <section className="pane editor">
+            <MDEditor
+                value={currentNote.body}
+                onChange={updateNote}
+                selectedTab={selectedTab}
+                onTabChange={setSelectedTab}
+                minEditorHeight={80}
+                heightUnits="vh"
+            />
+            <MDEditor.Markdown source={currentNote.body} />
         </section>
-    )
+    );
 }
 
-Sidebar.propTypes = {
-    notes : PropTypes.arrayOf(
-        PropTypes.shape({
-            id : PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-        })
-    ).isRequired,
-    currentNote : PropTypes.shape({
-        id : PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    }),
-    setCurrentNoteId : PropTypes.func.isRequired, 
+Editor.propTypes = {
+    currentNote: PropTypes.shape({
+        body: PropTypes.string.isRequired,
+    }).isRequired,
+    updateNote: PropTypes.func.isRequired,
 };
