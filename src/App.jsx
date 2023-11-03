@@ -5,10 +5,14 @@ import Sidebar from './components/Sidebar';
 import Editor from './components/Editor';
 
 export default function App(){
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState( JSON.parse(localStorage.getItem("notes")) || []);
     const [currentNoteId, setCurrentNoteId] = useState('')
     //     (notes[0] && notes[0].id) || ""
     // )
+
+    useEffect(() => {
+        localStorage.setItem("notes", JSON.stringify(notes))
+    },[notes])
 
     useEffect(() => {
       if (notes.length > 0 && !currentNoteId) {
