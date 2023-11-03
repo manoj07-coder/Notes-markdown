@@ -52,12 +52,7 @@ export default function App(){
      })
   }
 
-  setNotes(prevNotes =>
-    prevNotes.map(note =>
-        note.id === currentNoteId ? { ...note, body: text } : note
-    )
-);
-
+  
     return (
         <main>
            {
