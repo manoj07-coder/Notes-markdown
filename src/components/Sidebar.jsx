@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 
 export default function Sidebar(props){
-    const noteElements = props.notes.map((note, index) => (
+    const noteElements = props.notes.map((note) => (
         <div key={note.id}>
           <div
             className={`title ${note.id === props.currentNote.id ? "selected-note" : ""}`}
             onClick={() => props.setCurrentNoteId(note.id)}
           >
-            <h4 className="text-snippet">Note {index + 1}</h4>
+            <h4 className="text-snippet">{note.body.split("\n")[0]}</h4>
           </div>
         </div>
       ));
