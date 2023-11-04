@@ -13,8 +13,8 @@ export default function Editor({ currentNote, updateNote }) {
                 onChange={updateNote}
                 selectedTab={selectedTab}
                 onTabChange={setSelectedTab}
-                minEditorHeight={80}
-                heightUnits="vh"
+                minEditorHeight={100}
+                heightUnits="%"
             />
             <MDEditor.Markdown source={currentNote.body} />
         </section>
