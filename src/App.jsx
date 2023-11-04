@@ -11,6 +11,12 @@ export default function App(){
     const [notes, setNotes] = useState([]);
     const [currentNoteId, setCurrentNoteId] = useState('')
 
+    const sortedNotes = notes.sort((a,b) => b.updatedAt - a.updatedAt)
+
+    const currentNote =
+        notes.find(note => note.id === currentNoteId)
+        || notes[0]
+
     useEffect(() => {
         localStorage.setItem("notes", JSON.stringify(notes))
     },[notes])
@@ -34,7 +40,9 @@ export default function App(){
 
     async function createNewNote(){
         const newNote = {
-            body : "# Type your markdown note's title here"
+            body : "# Type your markdown note's title here",
+            createdAt : Date.now(),
+            updatedAt : Date.now()
         }
         const newNoteRef = await addDoc(notesCollection, newNote)
         if (!currentNoteId) {
@@ -50,7 +58,7 @@ export default function App(){
 
     async function updateNote(text) {
     const docRef = doc(db, "notes", currentNoteId)
-    await setDoc(docRef, {body : text}, {merge : true})
+    await setDoc(docRef, {body : text, updatedAt : Date.now()}, {merge : true})
   }
 
   async function deleteNote(noteId){
@@ -71,15 +79,15 @@ export default function App(){
                   className = "split"
                 >
                 <Sidebar 
-                notes = {notes}
-                currentNote = {findCurrentNote()}
+                notes = {sortedNotes}
+                currentNote = {currentNote}
                 setCurrentNoteId = {setCurrentNoteId}
                 newNote = {createNewNote}
                 deleteNote = {deleteNote}
                 />
                 {
                 <Editor 
-                currentNote = {findCurrentNote()}
+                currentNote = {currentNote}
                 updateNote = {updateNote}
                 />
                 }    
