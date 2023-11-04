@@ -3,6 +3,8 @@ import { nanoid } from 'nanoid';
 import Split  from 'react-split';
 import Sidebar from './components/Sidebar';
 import Editor from './components/Editor';
+import { onSnapshot } from 'firebase/firestore';
+import { notesCollection } from '../firebase';
 
 export default function App(){
     const [notes, setNotes] = useState( () => JSON.parse(localStorage.getItem("notes")) || []);
@@ -15,10 +17,11 @@ export default function App(){
     },[notes])
 
     useEffect(() => {
-      if (notes.length > 0 && !currentNoteId) {
-          setCurrentNoteId(notes[0].id);
-      }
-  }, [notes, currentNoteId]);
+      const unSubscribe = onSnapshot(notesCollection, function (snapshot) {
+        
+      })
+      return unSubscribe
+  }, []);
 
     function createNewNote(){
         const newNote = {
